@@ -4,6 +4,10 @@ import twitter
 import re
 import os
 import argparse
+import numpy as np
+import pandas as pd
+from wordcloud import WordCloud, STOPWORDS, ImageColorGenerator
+import matplotlib.pyplot as plt
 from math import ceil
 from datetime import datetime, timedelta
 
@@ -13,6 +17,7 @@ parser.add_argument('number_of_tweets', type=int, help='number of tweets to grab
 
 args = parser.parse_args()
 
+stopwords = set(STOPWORDS)
 # Connect to the Twitter API
 t = twitter.Api(
     consumer_key = os.environ.get('TWTR_CONS_KEY'),
@@ -42,10 +47,10 @@ def normalize_and_add_to_words(tweet):
     match_rt = full_text.startswith('RT @')
 
     # Remove mentions
-    normalized_full_text = re.sub('(\A){0,1}@[\d\w]*(\s|\Z){1}', '', full_text)
+    normalized_full_text = re.sub(r'(\A){0,1}@[\d\w]*(\s|\Z){1}', '', full_text)
 
     # Remove emails
-    normalized_full_text = re.sub('(\A){0,1}[a-z0-9]+[\._]?[a-z0-9]+[@]\w+[.]\w{2,3}(\s|\Z){1}','', normalized_full_text)
+    normalized_full_text = re.sub(r'(\A){0,1}[a-z0-9]+[\._]?[a-z0-9]+[@]\w+[.]\w{2,3}(\s|\Z){1}','', normalized_full_text)
 
     # Only look at words that weren't in retweeted tweets and are more than 1 character
     if (not match_rt and len(normalized_full_text) > 0):
@@ -82,17 +87,26 @@ def get_all_tweets(screen_name):
 
     return all_tweets
 
-all_tweets = get_all_tweets(args.screen_name)
+def create_wordcloud(words):
+    wordcloud = WordCloud(width = 800, height = 800, 
+                    background_color ='white', 
+                    stopwords = stopwords, 
+                    min_font_size = 10).generate_from_frequencies(words)
+    plt.figure(figsize = (8,8), facecolor = None)
+    plt.imshow(wordcloud)
+    plt.axis("off")
+    plt.tight_layout(pad=0)
+    plt.show()
 
-for tweet in all_tweets:
-    normalize_and_add_to_words(tweet)
+def main():
+    all_tweets = get_all_tweets(args.screen_name)
+    
+    for tweet in all_tweets:
+        normalize_and_add_to_words(tweet)
 
-# Print out the words and their counts for each week
-for week in words_of_week:
-    print(week)
-    words = words_of_week[week]
-    sorted_items = sorted(words.items(), key=lambda x:x[1])
+    for date in words_of_week.keys():
+        create_wordcloud(words_of_week[date])
+        return
 
-    for item in sorted_items:
-        if item[1] > 1:
-            print(item[0], item[1])
+if __name__ == "__main__":
+    main()
