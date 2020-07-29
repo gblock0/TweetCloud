@@ -23,10 +23,11 @@ t = twitter.Api(
 )
 
 # Common words we don't care to keep track of
-common_words = {'the', 'or', 'a', 'an', 'this', 'on', 'it', 'are',
+common_words = {'the', 'or', 'an', 'this', 'on', 'it', 'are',
                 'to', 'out', 'and','as', 'of', 'so', 'for', 'be',
-                'in', 'that', 'we', 'at','is', 'were','if','i',
-                'do', 'he', 'with', 'have', 'by', 'am'
+                'in', 'that', 'we', 'at','is', 'were','if',
+                'do', 'he', 'with', 'have', 'by', 'am', 'will',
+                'they', 'from', 'has', 'go', 'its'
                 }
 words_of_week = {}
 MAX_COUNT_FROM_TWITTER = 200
@@ -34,7 +35,7 @@ MAX_COUNT_FROM_TWITTER = 200
 # Normalize the tweet:
 #   - Remove mentions, emails, and websites
 #   - Disregard retweeted tweets
-def normalize_tweet(tweet):
+def normalize_and_add_to_words(tweet):
     full_text = html.unescape(tweet.full_text)
     date_of_tweet = datetime.strptime(tweet.created_at, '%a %b %d %H:%M:%S %z %Y').date()
     sunday_of_tweet = date_of_tweet - timedelta(days=date_of_tweet.weekday() +1)
@@ -64,14 +65,14 @@ def normalize_tweet(tweet):
 
 def get_all_tweets(screen_name):
     count = MAX_COUNT_FROM_TWITTER
-    number_of_api_calls = 0
+    number_of_extra_api_calls = 0
     if args.number_of_tweets < MAX_COUNT_FROM_TWITTER:
         count = args.number_of_tweets
     elif args.number_of_tweets > MAX_COUNT_FROM_TWITTER:
-        number_of_api_calls = ceil((args.number_of_tweets - MAX_COUNT_FROM_TWITTER)/MAX_COUNT_FROM_TWITTER)
+        number_of_extra_api_calls = ceil((args.number_of_tweets - MAX_COUNT_FROM_TWITTER)/MAX_COUNT_FROM_TWITTER)
     all_tweets = t.GetUserTimeline(screen_name=screen_name, count=count)
     last_id = all_tweets[-1].id
-    for i in range(number_of_api_calls):
+    for i in range(number_of_extra_api_calls):
         new = t.GetUserTimeline(screen_name=screen_name, max_id=last_id-1)
         if len(new) > 0:
             all_tweets.extend(new)
@@ -84,7 +85,7 @@ def get_all_tweets(screen_name):
 all_tweets = get_all_tweets(args.screen_name)
 
 for tweet in all_tweets:
-    normalize_tweet(tweet)
+    normalize_and_add_to_words(tweet)
 
 # Print out the words and their counts for each week
 for week in words_of_week:
