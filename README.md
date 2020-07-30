@@ -17,6 +17,12 @@ The goal of this project is generate a gif of word clouds from a specific Twitte
 
 `python3 app.py <screen_name> <number_of_tweets>`
 
+### Example
+
+Running `python3 app.py nasa 1000` generates:
+
+![TweetCloud Demo](nasa-2020-05-24-to-2020-07-26.gif)
+
 ## Contributors
 
 - [jgoldfinger](https://github.com/jgoldfinger)
