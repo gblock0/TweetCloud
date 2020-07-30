@@ -5,7 +5,6 @@ import re
 import os
 import argparse
 import numpy as np
-import pandas as pd
 from wordcloud import WordCloud, STOPWORDS, ImageColorGenerator
 import matplotlib.pyplot as plt
 from math import ceil
@@ -64,7 +63,7 @@ def normalize_and_add_to_words(tweet):
             normalized_word = re.sub(r'[\W\d]+','', word.lower())
             if normalized_word not in common_words and len(normalized_word) > 1 and not match_website:
                 if normalized_word in words_of_week[sunday_of_tweet]:
-                    words[normalized_word] = words[normalized_word] + 1
+                    words[normalized_word] += + 1
                 else:
                     words[normalized_word] = 1
 
@@ -75,10 +74,17 @@ def get_all_tweets(screen_name):
         count = args.number_of_tweets
     elif args.number_of_tweets > MAX_COUNT_FROM_TWITTER:
         number_of_extra_api_calls = ceil((args.number_of_tweets - MAX_COUNT_FROM_TWITTER)/MAX_COUNT_FROM_TWITTER)
-    all_tweets = t.GetUserTimeline(screen_name=screen_name, count=count)
+    all_tweets = t.GetUserTimeline(screen_name=screen_name, count=count, include_rts=False)
     last_id = all_tweets[-1].id
+    number_of_tweets_to_find=args.number_of_tweets - count
+
     for i in range(number_of_extra_api_calls):
-        new = t.GetUserTimeline(screen_name=screen_name, max_id=last_id-1)
+        if (number_of_tweets_to_find < MAX_COUNT_FROM_TWITTER):
+            count = number_of_tweets_to_find
+
+        new = t.GetUserTimeline(screen_name=screen_name, count=count, max_id=last_id-1, include_rts=False)
+        number_of_tweets_to_find -= count
+
         if len(new) > 0:
             all_tweets.extend(new)
             last_id = new[-1].id
@@ -88,9 +94,9 @@ def get_all_tweets(screen_name):
     return all_tweets
 
 def create_wordcloud(words):
-    wordcloud = WordCloud(width = 800, height = 800, 
-                    background_color ='white', 
-                    stopwords = stopwords, 
+    wordcloud = WordCloud(width = 800, height = 800,
+                    background_color ='white',
+                    stopwords = stopwords,
                     min_font_size = 10).generate_from_frequencies(words)
     plt.figure(figsize = (8,8), facecolor = None)
     plt.imshow(wordcloud)
@@ -100,7 +106,7 @@ def create_wordcloud(words):
 
 def main():
     all_tweets = get_all_tweets(args.screen_name)
-    
+
     for tweet in all_tweets:
         normalize_and_add_to_words(tweet)
 
