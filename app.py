@@ -1,8 +1,6 @@
 import argparse
 import html
-import numpy as np
 import matplotlib.pyplot as plt
-import matplotlib.image as mpimg
 import os
 import re
 import shutil
@@ -11,7 +9,7 @@ import uuid
 from datetime import datetime, timedelta
 from math import ceil
 from PIL import Image
-from wordcloud import WordCloud, STOPWORDS, ImageColorGenerator
+from wordcloud import WordCloud, STOPWORDS
 
 parser = argparse.ArgumentParser(description='Gets a dictionary of the most used words per week from an account')
 parser.add_argument('screen_name', help='screen name to map')
@@ -22,6 +20,7 @@ args = parser.parse_args()
 # Create the temp folder for the images
 tmp_image_folder = 'tmpPhotos'
 stopwords = set(STOPWORDS)
+
 # Connect to the Twitter API
 t = twitter.Api(
     consumer_key = os.environ.get('TWTR_CONS_KEY'),
@@ -102,11 +101,15 @@ def get_all_tweets(screen_name):
 # Creates a word cloud from the passed in word/frequency dictionary
 # and saved it in tmp_image_folder
 def create_wordcloud(words, date):
-    wordcloud = WordCloud(width = 800, height = 800,
+    wordcloud = WordCloud(width = 950, height = 950,
                     background_color ='white',
                     stopwords = stopwords,
                     min_font_size = 10).generate_from_frequencies(words)
-    plt.figure(figsize = (8,8), facecolor = None)
+    plt.figure(figsize = (9.5,10), facecolor = None)
+    plt.title('Words seen the week of ' + str(date) + ' in ' + args.screen_name + '\'s tweets', {
+        'fontsize': 18,
+        'fontweight': 600
+    }, pad=20)
     plt.axis("off")
     plt.tight_layout(pad=0)
     plt.imshow(wordcloud)
@@ -115,7 +118,6 @@ def create_wordcloud(words, date):
     return Image.open(file_path)
 
 def main():
-
     # Create folder for intermediate images
     if(not os.path.isdir(tmp_image_folder)):
         os.mkdir(tmp_image_folder)
@@ -134,7 +136,7 @@ def main():
     for date in sorted_dates:
         word_clouds.append(create_wordcloud(words_of_the_weeks[date], date))
 
-    word_clouds[0].save(args.screen_name + '-' + str(start_date) + '-to-' + str(end_date) + '.gif', save_all=True, append_images=word_clouds[1:], optimized=False, duration=5000, loop=1)
+    word_clouds[0].save(args.screen_name + '-' + str(start_date) + '-to-' + str(end_date) + '.gif', save_all=True, append_images=word_clouds[1:], optimized=False, duration=3000, loop=1)
 
     # Cleanup intermediate images
     shutil.rmtree(tmp_image_folder)
