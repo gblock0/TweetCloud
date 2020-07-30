@@ -1,0 +1,10 @@
+name: tweetcloud
+channels:
+  - conda-forge
+dependencies:
+  - python=3.8.*
+  - matplotlib=3.3.*
+  - pandas=1.1.*
+  - pillow=7.2.*
+  - python-twitter=3.*
+  - wordcloud=1.7.*

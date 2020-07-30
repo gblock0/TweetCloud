@@ -7,6 +7,7 @@ The goal of this project is generate a gif of word clouds from a specific Twitte
 ## Setup
 
 1. [Create a Twitter app](https://developer.twitter.com/en/apps)
+1. Install the package using `pip install git+https://github.com/gblock0/TweetCloud`
 1. Add the following keys from your new Twitter app to your environment variables
    - `export TWTR_CONS_KEY=<TWITTER_CONSUMER_API_KEY>`
    - `export TWTR_CONS_SEC=<TWITTER_CONSUMER_API_SECRET_KEY>`
@@ -15,13 +16,19 @@ The goal of this project is generate a gif of word clouds from a specific Twitte
 
 ## How to use
 
-`python3 app.py <screen_name> <number_of_tweets>`
+`tweetcloud <screen_name> <number_of_tweets>`
 
 ### Example
 
-Running `python3 app.py nasa 1000` generates:
+Running `tweetcloud nasa 1000` generates:
 
 ![TweetCloud Demo](nasa-2020-05-24-to-2020-07-26.gif)
+
+## Developing
+
+1. Clone repo
+1. Create new environment from environment.yml: `conda env create -f environment.yml`
+1. Activate environment and install using `--editable`: `pip install -e path/to/repo`
 
 ## Contributors
 
