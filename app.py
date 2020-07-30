@@ -19,7 +19,6 @@ args = parser.parse_args()
 
 # Create the temp folder for the images
 tmp_image_folder = 'tmpPhotos'
-stopwords = set(STOPWORDS)
 
 # Connect to the Twitter API
 t = twitter.Api(
@@ -30,13 +29,8 @@ t = twitter.Api(
     tweet_mode = 'extended'
 )
 
-# Common words we don't care to keep track of
-common_words = {'the', 'or', 'an', 'this', 'on', 'it', 'are',
-                'to', 'out', 'and','as', 'of', 'so', 'for', 'be',
-                'in', 'that', 'we', 'at','is', 'were','if',
-                'do', 'he', 'with', 'have', 'by', 'am', 'will',
-                'they', 'from', 'has', 'go', 'its'
-                }
+# Stop Words
+stop_words = {'go', 'will'}.union(set(STOPWORDS))
 words_of_the_weeks = {}
 MAX_COUNT_FROM_TWITTER = 200
 
@@ -65,7 +59,10 @@ def normalize_and_add_to_words(tweet):
         for word in words_in_tweet:
             match_website = re.search('^http[s]?://', word)
             normalized_word = re.sub(r'[\W\d]+','', word.lower())
-            if normalized_word not in common_words and len(normalized_word) > 1 and not match_website:
+            if (normalized_word not in stop_words
+                    and len(normalized_word) > 1
+                    and not match_website
+                ):
                 if normalized_word in words_of_the_weeks[sunday_of_tweet]:
                     words[normalized_word] += + 1
                 else:
@@ -103,7 +100,6 @@ def get_all_tweets(screen_name):
 def create_wordcloud(words, date):
     wordcloud = WordCloud(width = 950, height = 950,
                     background_color ='white',
-                    stopwords = stopwords,
                     min_font_size = 10).generate_from_frequencies(words)
     plt.figure(figsize = (9.5,10), facecolor = None)
     plt.title('Words seen the week of ' + str(date) + ' in ' + args.screen_name + '\'s tweets', {
@@ -136,7 +132,7 @@ def main():
     for date in sorted_dates:
         word_clouds.append(create_wordcloud(words_of_the_weeks[date], date))
 
-    word_clouds[0].save(args.screen_name + '-' + str(start_date) + '-to-' + str(end_date) + '.gif', save_all=True, append_images=word_clouds[1:], optimized=False, duration=3000, loop=1)
+    word_clouds[0].save(args.screen_name + '-' + str(start_date) + '-to-' + str(end_date) + '.gif', save_all=True, append_images=word_clouds[1:], optimized=False, duration=3000, loop=0)
 
     # Cleanup intermediate images
     shutil.rmtree(tmp_image_folder)
