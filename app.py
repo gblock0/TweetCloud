@@ -1,14 +1,17 @@
-import requests
-import html
-import twitter
-import re
-import os
 import argparse
+import html
 import numpy as np
-from wordcloud import WordCloud, STOPWORDS, ImageColorGenerator
 import matplotlib.pyplot as plt
-from math import ceil
+import matplotlib.image as mpimg
+import os
+import re
+import shutil
+import twitter
+import uuid
 from datetime import datetime, timedelta
+from math import ceil
+from PIL import Image
+from wordcloud import WordCloud, STOPWORDS, ImageColorGenerator
 
 parser = argparse.ArgumentParser(description='Gets a dictionary of the most used words per week from an account')
 parser.add_argument('screen_name', help='screen name to map')
@@ -16,6 +19,8 @@ parser.add_argument('number_of_tweets', type=int, help='number of tweets to grab
 
 args = parser.parse_args()
 
+# Create the temp folder for the images
+tmp_image_folder = 'tmpPhotos'
 stopwords = set(STOPWORDS)
 # Connect to the Twitter API
 t = twitter.Api(
@@ -33,7 +38,7 @@ common_words = {'the', 'or', 'an', 'this', 'on', 'it', 'are',
                 'do', 'he', 'with', 'have', 'by', 'am', 'will',
                 'they', 'from', 'has', 'go', 'its'
                 }
-words_of_week = {}
+words_of_the_weeks = {}
 MAX_COUNT_FROM_TWITTER = 200
 
 # Normalize the tweet:
@@ -53,20 +58,21 @@ def normalize_and_add_to_words(tweet):
 
     # Only look at words that weren't in retweeted tweets and are more than 1 character
     if (not match_rt and len(normalized_full_text) > 0):
-        if sunday_of_tweet not in words_of_week:
-            words_of_week[sunday_of_tweet] = {}
+        if sunday_of_tweet not in words_of_the_weeks:
+            words_of_the_weeks[sunday_of_tweet] = {}
 
-        words = words_of_week[sunday_of_tweet]
+        words = words_of_the_weeks[sunday_of_tweet]
         words_in_tweet = normalized_full_text.split()
         for word in words_in_tweet:
             match_website = re.search('^http[s]?://', word)
             normalized_word = re.sub(r'[\W\d]+','', word.lower())
             if normalized_word not in common_words and len(normalized_word) > 1 and not match_website:
-                if normalized_word in words_of_week[sunday_of_tweet]:
+                if normalized_word in words_of_the_weeks[sunday_of_tweet]:
                     words[normalized_word] += + 1
                 else:
                     words[normalized_word] = 1
 
+# Gets the number tweets for a screen_name specified in the command line args
 def get_all_tweets(screen_name):
     count = MAX_COUNT_FROM_TWITTER
     number_of_extra_api_calls = 0
@@ -93,26 +99,45 @@ def get_all_tweets(screen_name):
 
     return all_tweets
 
-def create_wordcloud(words):
+# Creates a word cloud from the passed in word/frequency dictionary
+# and saved it in tmp_image_folder
+def create_wordcloud(words, date):
     wordcloud = WordCloud(width = 800, height = 800,
                     background_color ='white',
                     stopwords = stopwords,
                     min_font_size = 10).generate_from_frequencies(words)
     plt.figure(figsize = (8,8), facecolor = None)
-    plt.imshow(wordcloud)
     plt.axis("off")
     plt.tight_layout(pad=0)
-    plt.show()
+    plt.imshow(wordcloud)
+    file_path = tmp_image_folder + '/image-' + str(date) +'.png'
+    plt.savefig(file_path)
+    return Image.open(file_path)
 
 def main():
+
+    # Create folder for intermediate images
+    if(not os.path.isdir(tmp_image_folder)):
+        os.mkdir(tmp_image_folder)
+
+    # Get all the tweets for the user
     all_tweets = get_all_tweets(args.screen_name)
 
+    # Normalize all the tweets and add the words to the words_of_the_weeks dictionary
     for tweet in all_tweets:
         normalize_and_add_to_words(tweet)
 
-    for date in words_of_week.keys():
-        create_wordcloud(words_of_week[date])
-        return
+    word_clouds = []
+    sorted_dates = sorted(words_of_the_weeks.keys())
+    start_date = sorted_dates[0]
+    end_date = sorted_dates[-1]
+    for date in sorted_dates:
+        word_clouds.append(create_wordcloud(words_of_the_weeks[date], date))
+
+    word_clouds[0].save(args.screen_name + '-' + str(start_date) + '-to-' + str(end_date) + '.gif', save_all=True, append_images=word_clouds[1:], optimized=False, duration=5000, loop=1)
+
+    # Cleanup intermediate images
+    shutil.rmtree(tmp_image_folder)
 
 if __name__ == "__main__":
     main()
