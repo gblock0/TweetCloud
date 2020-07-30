@@ -1,6 +1,6 @@
 # Welcome to TweetCloud!
 
-The goal of this project is generate a gif of word clouds from a specific Twitter user's tweets.
+The goal of this project is generate a gif of word clouds from a specific Twitter user's tweets. Currently, 3000 is the max number of tweets that will be fetched from Twitter.
 
 **NOTE**: This project is in development, so not all features will work or are finished! Feel free to open a PR if you'd like to contribute!
 
