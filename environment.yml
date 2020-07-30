@@ -3,6 +3,7 @@ channels:
   - conda-forge
 dependencies:
   - python=3.8.*
+  - coloredlogs=14.*
   - matplotlib=3.3.*
   - pandas=1.1.*
   - pillow=7.2.*
