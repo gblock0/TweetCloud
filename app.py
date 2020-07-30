@@ -1,4 +1,5 @@
 import argparse
+import coloredlogs, logging
 import html
 import matplotlib.pyplot as plt
 import os
@@ -114,6 +115,10 @@ def create_wordcloud(words, date):
     return Image.open(file_path)
 
 def main():
+    if (args.number_of_tweets > 3000):
+        coloredlogs.install()
+        logging.warning('TweetCloud does not currently support getting more than 3000 tweets, so only 3000 tweets will be used for your gif...')
+
     # Create folder for intermediate images
     if(not os.path.isdir(tmp_image_folder)):
         os.mkdir(tmp_image_folder)
