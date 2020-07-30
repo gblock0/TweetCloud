@@ -10,7 +10,7 @@ import twitter
 import uuid
 from datetime import datetime, timedelta
 from math import ceil
-from PIL import Image, ImageDraw
+from PIL import Image
 from wordcloud import WordCloud, STOPWORDS, ImageColorGenerator
 
 parser = argparse.ArgumentParser(description='Gets a dictionary of the most used words per week from an account')
