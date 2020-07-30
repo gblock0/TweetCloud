@@ -142,3 +142,4 @@ tmpPhotos
 *.gif
 .DS_STORE
 .idea/
+tweetcloud/_version.py
