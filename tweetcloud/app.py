@@ -1,14 +1,13 @@
 import argparse
-import helpers
 import logging
 import os
 import shutil
 from datetime import datetime, timedelta
-from math import ceil
 
 import coloredlogs
+import helpers
 import twitter
-from PIL import Image
+
 
 def main():
 
@@ -68,7 +67,11 @@ def main():
     start_date = sorted_dates[0]
     end_date = sorted_dates[-1]
     for date in sorted_dates:
-        word_clouds.append(helpers.create_wordcloud(words_of_the_weeks[date], date, tmp_image_folder, args.screen_name))
+        word_clouds.append(
+            helpers.create_wordcloud(
+                words_of_the_weeks[date], date, tmp_image_folder, args.screen_name
+            )
+        )
 
     word_clouds[0].save(
         args.screen_name + "-" + str(start_date) + "-to-" + str(end_date) + ".gif",

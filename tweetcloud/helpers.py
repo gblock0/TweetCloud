@@ -1,8 +1,11 @@
 import html
 import re
+from math import ceil
+
 import matplotlib.pyplot as plt
 from PIL import Image
 from wordcloud import STOPWORDS, WordCloud
+
 
 # Normalize the tweet:
 #   - Remove mentions, emails, and websites
@@ -40,6 +43,7 @@ def normalize_and_split_tweet(tweet, words):
                 else:
                     words[normalized_word] = 1
 
+
 # Gets the number tweets for a screen_name specified in the command line args
 def get_all_tweets(t, screen_name, number_of_tweets):
     count = max_count_from_twitter = 200
@@ -73,6 +77,7 @@ def get_all_tweets(t, screen_name, number_of_tweets):
 
     return all_tweets
 
+
 # Creates a word cloud from the passed in word/frequency dictionary
 # and saved it in tmp_image_folder
 def create_wordcloud(words, date, tmp_image_folder, screen_name):
@@ -92,4 +97,3 @@ def create_wordcloud(words, date, tmp_image_folder, screen_name):
     plt.savefig(file_path)
 
     return Image.open(file_path)
-
