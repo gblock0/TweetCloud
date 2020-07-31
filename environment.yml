@@ -11,6 +11,6 @@ dependencies:
   - wordcloud=1.7.*
 
   # dev dependencies
-  - black==19.*
-  - flake8==3.8.*
+  - black=19.*
+  - flake8=3.8.*
   - pre-commit=2.6.*
