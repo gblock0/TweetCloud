@@ -5,8 +5,9 @@ import shutil
 from datetime import datetime, timedelta
 
 import coloredlogs
-import helpers
 import twitter
+
+from tweetcloud import helpers
 
 
 def main():
