@@ -13,4 +13,5 @@ dependencies:
   # dev dependencies
   - black=19.*
   - flake8=3.8.*
+  - isort=5.2.*
   - pre-commit=2.6.*
