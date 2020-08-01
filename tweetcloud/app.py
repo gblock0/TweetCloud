@@ -69,9 +69,9 @@ def main():
     end_date = sorted_dates[-1]
     for date in sorted_dates:
         word_clouds.append(
-            helpers.create_wordcloud(
+            Image.open(helpers.create_wordcloud(
                 words_of_the_weeks[date], date, tmp_image_folder, args.screen_name
-            )
+            ))
         )
 
     word_clouds[0].save(

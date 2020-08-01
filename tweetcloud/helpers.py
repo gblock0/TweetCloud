@@ -1,5 +1,6 @@
 import html
 import re
+import numpy as np
 from math import ceil
 
 import matplotlib.pyplot as plt
@@ -81,8 +82,16 @@ def get_all_tweets(t, screen_name, number_of_tweets):
 # Creates a word cloud from the passed in word/frequency dictionary
 # and saved it in tmp_image_folder
 def create_wordcloud(words, date, tmp_image_folder, screen_name):
+    mask = np.zeros((234, 456), dtype=np.int)
+    mask[100:150, 300:400] = 255
+
     wordcloud = WordCloud(
-        width=950, height=950, background_color="white", min_font_size=10
+        width=950,
+        height=950,
+        background_color="white",
+        min_font_size=10,
+        # random_state makes sure the world clouds are deterministic
+        random_state=42
     ).generate_from_frequencies(words)
     plt.figure(figsize=(9.5, 10), facecolor=None)
     plt.title(
@@ -96,4 +105,4 @@ def create_wordcloud(words, date, tmp_image_folder, screen_name):
     file_path = tmp_image_folder + "/image-" + str(date) + ".png"
     plt.savefig(file_path)
 
-    return Image.open(file_path)
+    return file_path
