@@ -35,4 +35,5 @@ jobs:
     - uses: pre-commit/action@v2.0.0
     - name: Run Tests
       run: |
+        pip install pytest
         pytest -vv tests/
