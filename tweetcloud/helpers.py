@@ -28,7 +28,7 @@ def transform_tweets_to_word_counts(
     tweets: Iterable[twitter.models.Status],
 ) -> Dict[datetime.date, Counter[str]]:
     """
-    Group tweets and return normalized word counts per group.   
+    Group tweets and return normalized word counts per group.
     """
     groups = groupby(sorted(tweets, key=_tweet_group_key), key=_tweet_group_key)
     # Lots of iteration here. If we start processing tons of tweets
@@ -42,7 +42,7 @@ def transform_tweets_to_word_counts(
 
 def _tweet_group_key(tweet: twitter.models.Status) -> datetime.date:
     """
-    Get the grouping key for each tweet, i.e., the Sunday prior to the 
+    Get the grouping key for each tweet, i.e., the Sunday prior to the
     tweet's date.
     """
     tweet_date = datetime.datetime.utcfromtimestamp(tweet.created_at_in_seconds)
