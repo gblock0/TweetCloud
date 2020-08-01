@@ -61,7 +61,7 @@ def main():
             words_of_the_weeks[sunday_of_tweet] = {}
 
         current_words = words_of_the_weeks[sunday_of_tweet]
-        helpers.normalize_and_split_tweet(tweet, current_words)
+        helpers.normalize_and_split_tweet(tweet.full_text, current_words)
 
     word_clouds = []
     sorted_dates = sorted(words_of_the_weeks.keys())

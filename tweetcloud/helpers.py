@@ -14,7 +14,7 @@ def normalize_and_split_tweet(tweet, words):
     # Stop Words
     stop_words = {"go", "will"}.union(set(STOPWORDS))
 
-    full_text = html.unescape(tweet.full_text)
+    full_text = html.unescape(tweet)
     match_rt = full_text.startswith("RT @")
 
     # Remove mentions
