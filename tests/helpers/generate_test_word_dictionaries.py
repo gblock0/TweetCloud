@@ -4,6 +4,7 @@ import re
 
 possible_words = []
 
+
 def generate_word_set(num_words, file_path):
     dic = {}
     for _ in range(num_words):
