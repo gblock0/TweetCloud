@@ -16,7 +16,7 @@ def test_normalize_and_split_tweet():
 
     # Test removing account handles (letters, numbers, and '_')
     account_handles_tweet = (
-        "@testAccount great @testAccountNum1 @testAccountHypen-1 nuke"
+        "@testAccount great @TestAccountNum1 @testAccountHypen_1 nuke"
     )
     helpers.normalize_and_split_tweet(account_handles_tweet, words)
     assert words == {"words": 3, "test": 2, "gum": 5, "nuke": 3, "great": 1}
@@ -27,7 +27,7 @@ def test_normalize_and_split_tweet():
     assert words == {"words": 4, "test": 2, "gum": 5, "nuke": 3, "great": 1}
 
     # Test removing emails
-    emails_tweet = "test test+2@gmail.co test_1@ema-il.org test@email.com"
+    emails_tweet = "test ttest++sdfsdflkj34+sdfa_sdf@gmail.co test+2@gmail.co test_12@ema-il.org test@email.com test-2@email.com"
     helpers.normalize_and_split_tweet(emails_tweet, words)
     assert words == {"words": 4, "test": 3, "gum": 5, "nuke": 3, "great": 1}
 

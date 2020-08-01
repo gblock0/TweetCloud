@@ -22,7 +22,7 @@ def normalize_and_split_tweet(tweet, words):
 
     # Remove emails
     normalized_full_text = re.sub(
-        r"(\A){0,1}[a-z0-9]+[\._]?[a-z0-9]+[@]\w+[.]\w{2,3}(\s|\Z){1}",
+        r"(\A){0,1}[a-z0-9\+]+[\w\+\-]+[@][\w\-]+[.]\w{2,3}(\s|\Z){1}",
         "",
         normalized_full_text,
     )
