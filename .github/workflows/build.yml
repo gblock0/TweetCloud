@@ -33,8 +33,10 @@ jobs:
         pip install --upgrade pip
         pip install -e ".[dev]"
     - uses: pre-commit/action@v2.0.0
-    - name: Run Tests
+    - name: Setup test runner
       run: |
         pip install pytest
         pip install .
-        pytest -vv tests/
+    - name: Run tests
+      run:  pytest -vv tests/
+
