@@ -77,7 +77,12 @@ def _normalize_and_split_text(raw_text: str) -> Counter[str]:
 
 def _normalize_word(word: str) -> Optional[str]:
     """
-    Remove non-letter or underscore (`_`) characters from `word`.
+    Normalize `word` to something ready for the word cloud.
+
+    Steps:
+    1. Check that `word` is not an email, URL, or mention
+    2. Remove non-letter or underscore (`_`) characters from `word`
+    3. Check that the stripped-down `word` is not a stop word or too short
     """
     if any(pat.match(word) for pat in stop_patterns):
         return None
