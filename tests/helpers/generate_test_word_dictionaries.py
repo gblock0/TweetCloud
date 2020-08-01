@@ -1,10 +1,12 @@
 # Use the set of English words containing lower-case letters with no punctuation
-from english_words import english_words_lower_alpha_set
 import random
+
+from english_words import english_words_lower_alpha_set
+
 
 def generate_word_set(num_words, file_path):
     dic = {}
-    for x in range(num_words):
+    for _ in range(num_words):
         random_word = random.sample(english_words_lower_alpha_set, 1)[0]
         dic[random_word] = random.randint(2, 25)
 
@@ -27,4 +29,3 @@ print("Generaed large word set...")
 
 generate_word_set(1000, "tests/word_sets/huge_word_set.txt")
 print("Generaed huge word set...")
-

@@ -1,11 +1,11 @@
-import datetime
-import pytest
 import ast
+import datetime
 import os
 import shutil
-import numpy as np
-from PIL import Image
 
+import numpy as np
+import pytest
+from PIL import Image
 
 from tweetcloud import helpers
 
@@ -41,30 +41,16 @@ def test_normalize_and_split_tweet(tweet, expected_words):
     helpers.normalize_and_split_tweet(tweet, words)
     assert words == expected_words
 
+
 @pytest.mark.parametrize(
     "word_set_file_name, date, screen_name",
     [
-        (
-            "small_word_set.txt",
-            datetime.date(2020, 8, 1),
-            "test_account_small",
-         ),
-        (
-            "medium_word_set.txt",
-            datetime.date(2018, 10, 12),
-            "test_account_medium",
-        ),
-        (
-            "large_word_set.txt",
-            datetime.date(1999, 1, 1),
-            "test_account_large",
-        ),
-        (
-            "huge_word_set.txt",
-            datetime.date(2000, 5, 31),
-            "test_account_huge",
-        ),
-    ])
+        ("small_word_set.txt", datetime.date(2020, 8, 1), "test_account_small",),
+        ("medium_word_set.txt", datetime.date(2018, 10, 12), "test_account_medium",),
+        ("large_word_set.txt", datetime.date(1999, 1, 1), "test_account_large",),
+        ("huge_word_set.txt", datetime.date(2000, 5, 31), "test_account_huge",),
+    ],
+)
 def test_create_wordcloud(word_set_file_name, date, screen_name):
     test_images_folder = "tests/test_images"
 
@@ -74,14 +60,24 @@ def test_create_wordcloud(word_set_file_name, date, screen_name):
 
     f = open("tests/word_sets/" + word_set_file_name, "r")
     words = ast.literal_eval(f.read())
-    test_image_path = helpers.create_wordcloud(words, date, test_images_folder, screen_name)
+    test_image_path = helpers.create_wordcloud(
+        words, date, test_images_folder, screen_name
+    )
 
-    known_image = Image.open("tests/known_images/test_wordcloud-" + date.strftime("%Y-%m-%d") + ".png")
+    known_image = Image.open(
+        "tests/known_images/test_wordcloud-" + date.strftime("%Y-%m-%d") + ".png"
+    )
     test_image = Image.open(test_image_path)
 
     # Check the difference in the images
     # Pulled from https://redshiftzero.github.io/pytest-image/
-    sum_sq_diff = np.sum((np.asarray(known_image).astype('float') - np.asarray(test_image).astype('float'))**2)
+    sum_sq_diff = np.sum(
+        (
+            np.asarray(known_image).astype("float")
+            - np.asarray(test_image).astype("float")
+        )
+        ** 2
+    )
 
     if sum_sq_diff == 0:
         # Images are exactly the same

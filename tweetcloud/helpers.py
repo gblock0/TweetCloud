@@ -1,10 +1,9 @@
 import html
 import re
-import numpy as np
 from math import ceil
 
 import matplotlib.pyplot as plt
-from PIL import Image
+import numpy as np
 from wordcloud import STOPWORDS, WordCloud
 
 # Stop Words
@@ -91,7 +90,7 @@ def create_wordcloud(words, date, tmp_image_folder, screen_name):
         background_color="white",
         min_font_size=10,
         # random_state makes sure the world clouds are deterministic
-        random_state=42
+        random_state=42,
     ).generate_from_frequencies(words)
     plt.figure(figsize=(9.5, 10), facecolor=None)
     plt.title(
