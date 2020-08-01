@@ -36,7 +36,7 @@ t = twitter.Api(
 )
 
 # Stop Words
-stop_words = {'go', "will"}.union(set(STOPWORDS))
+stop_words = {"go", "will"}.union(set(STOPWORDS))
 words_of_the_weeks = {}
 MAX_COUNT_FROM_TWITTER = 200
 
