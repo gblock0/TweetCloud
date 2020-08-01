@@ -1,47 +1,95 @@
+import collections
+import datetime
 import html
+import operator
 import re
+from functools import reduce
+from itertools import groupby
 from math import ceil
+from typing import Dict, Final, Iterable, Optional, Tuple, Counter
 
 import matplotlib.pyplot as plt
+import twitter
 from PIL import Image
 from wordcloud import STOPWORDS, WordCloud
 
 # Stop Words
-stop_words = {"go", "will"}.union(set(STOPWORDS))
+stop_words: Final = {"go", "will"}.union(set(STOPWORDS))
+
+URL_PATTERN: Final = re.compile(r"https?://")
+EMAIL_PATTERN: Final = re.compile(r"[\w.\-+%]+@[\w.\-]+\.[a-zA-Z]{2,}")
+MENTIONS_PATTERN: Final = re.compile(r"@\w+")
+stop_patterns: Final = (URL_PATTERN, MENTIONS_PATTERN, EMAIL_PATTERN)
+
+BAD_CHAR_PATTERN: Final = re.compile(r"[\W\d]+")
 
 
-# Normalize the tweet:
-#   - Remove mentions, emails, and websites
-#   - Disregard retweeted tweets
-def normalize_and_split_tweet(tweet, words):
-    full_text = html.unescape(tweet)
-    match_rt = full_text.startswith("RT @")
+def transform_tweets_to_word_counts(
+    tweets: Iterable[twitter.models.Status],
+) -> Dict[Tuple[int, int], Counter[str]]:
+    """
+    Group tweets and return normalized word counts per group.   
+    """
+    groups = groupby(sorted(tweets, key=_tweet_group_key), key=_tweet_group_key)
+    # Lots of iteration here. If we start processing tons of tweets
+    # it might be noticeable, but if it comes to that we should use
+    # a proper text processing library.
+    return {
+        key: reduce(operator.add, map(normalize_and_split_tweet, group))
+        for key, group in groups
+    }
 
-    # Remove mentions
-    normalized_full_text = re.sub(r"(\A){0,1}@[\d\w]*(\s|\Z){1}", "", full_text)
 
-    # Remove emails
-    normalized_full_text = re.sub(
-        r"(\A){0,1}[a-z0-9\+]+[\w\+\-]+[@][\w\-]+[.]\w{2,3}(\s|\Z){1}",
-        "",
-        normalized_full_text,
-    )
+def _tweet_group_key(tweet: twitter.models.Status) -> Tuple[int, int]:
+    """
+    Get the grouping key for each tweet.
 
-    # Only look at words that weren't in retweeted tweets and are more than 1 character
-    if not match_rt and len(normalized_full_text) > 0:
-        words_in_tweet = normalized_full_text.split()
-        for word in words_in_tweet:
-            match_website = re.search("^http[s]?://", word)
-            normalized_word = re.sub(r"[\W\d]+", "", word.lower())
-            if (
-                normalized_word not in stop_words
-                and len(normalized_word) > 1
-                and not match_website
-            ):
-                if normalized_word in words:
-                    words[normalized_word] += 1
-                else:
-                    words[normalized_word] = 1
+    Returns the ISO (year, week) tuple
+    """
+    tweet_date = datetime.datetime.utcfromtimestamp(tweet.created_at_in_seconds)
+    # want to group by week, so dropping day
+    return tweet_date.isocalendar()[:2]
+
+
+# todo: mock a Status object in tests
+def normalize_and_split_tweet(tweet: twitter.models.Status) -> Counter[str]:
+    """
+    Convert a tweet's text into normalized term counts.
+
+    Temporary wrapper to avoid mocking in tests
+    """
+    return _normalize_and_split_text(tweet.full_text)
+
+
+def _normalize_and_split_text(raw_text: str) -> Counter[str]:
+    """
+    Convert a tweet's text into normalized term counts.
+    """
+    if not raw_text:
+        return collections.Counter()
+
+    text: Final = html.unescape(raw_text).casefold()
+    # Only look at words that weren't in retweeted tweets
+    if text.startswith("rt @"):
+        return collections.Counter()
+
+    # filter out `None`s
+    return collections.Counter(filter(bool, map(_normalize_word, text.split())))
+
+
+def _normalize_word(word: str) -> Optional[str]:
+    """
+    Remove non-letter or underscore (`_`) characters from `word`.
+    """
+    if any(pat.match(word) for pat in stop_patterns):
+        return None
+
+    word = BAD_CHAR_PATTERN.sub("", word)
+
+    if word in stop_words or len(word) < 2:
+        return None
+
+    return word
 
 
 # Gets the number tweets for a screen_name specified in the command line args
