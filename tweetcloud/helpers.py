@@ -6,7 +6,7 @@ import re
 from functools import reduce
 from itertools import groupby
 from math import ceil
-from typing import Dict, Final, Iterable, Optional, Tuple, Counter
+from typing import Counter, Dict, Final, Iterable, Optional
 
 import matplotlib.pyplot as plt
 import twitter
@@ -26,7 +26,7 @@ BAD_CHAR_PATTERN: Final = re.compile(r"[\W\d]+")
 
 def transform_tweets_to_word_counts(
     tweets: Iterable[twitter.models.Status],
-) -> Dict[Tuple[int, int], Counter[str]]:
+) -> Dict[datetime.date, Counter[str]]:
     """
     Group tweets and return normalized word counts per group.   
     """
@@ -40,15 +40,13 @@ def transform_tweets_to_word_counts(
     }
 
 
-def _tweet_group_key(tweet: twitter.models.Status) -> Tuple[int, int]:
+def _tweet_group_key(tweet: twitter.models.Status) -> datetime.date:
     """
-    Get the grouping key for each tweet.
-
-    Returns the ISO (year, week) tuple
+    Get the grouping key for each tweet, i.e., the Sunday prior to the 
+    tweet's date.
     """
     tweet_date = datetime.datetime.utcfromtimestamp(tweet.created_at_in_seconds)
-    # want to group by week, so dropping day
-    return tweet_date.isocalendar()[:2]
+    return tweet_date.date() - datetime.timedelta(days=tweet_date.weekday() + 1)
 
 
 # todo: mock a Status object in tests
@@ -74,7 +72,7 @@ def _normalize_and_split_text(raw_text: str) -> Counter[str]:
         return collections.Counter()
 
     # filter out `None`s
-    return collections.Counter(filter(bool, map(_normalize_word, text.split())))
+    return collections.Counter(filter(None, map(_normalize_word, text.split())))
 
 
 def _normalize_word(word: str) -> Optional[str]:
@@ -143,5 +141,6 @@ def create_wordcloud(words, date, tmp_image_folder, screen_name):
     plt.imshow(wordcloud)
     file_path = tmp_image_folder + "/image-" + str(date) + ".png"
     plt.savefig(file_path)
+    plt.close()
 
     return Image.open(file_path)
