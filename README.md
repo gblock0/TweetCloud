@@ -32,7 +32,10 @@ Running `tweetcloud nasa 1000` generates:
 1. Clone repo
 1. Create new environment from environment.yml: `conda env create -f environment.yml`
 1. Activate environment and install using `--editable`: `pip install -e ".[dev]"`
+1. Run tests with `pytest tests/`
+1. Run `pre-commit run --all-files` before opening a PR please
 
 ## Contributors
 
 - [jgoldfinger](https://github.com/jgoldfinger)
+- [onepan](https://github.com/onepan)
