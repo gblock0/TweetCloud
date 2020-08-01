@@ -32,6 +32,7 @@ def test_normalize_and_split_tweet():
     helpers.normalize_and_split_tweet(emails_tweet, words)
     assert words == {"words": 4, "test": 3, "gum": 5, "nuke": 3, "great": 1}
 
+    # Test ignoring retweets
     rt_tweet = "RT @testAccount Some other tweet here"
     helpers.normalize_and_split_tweet(rt_tweet, words)
     assert words == {"words": 4, "test": 3, "gum": 5, "nuke": 3, "great": 1}
