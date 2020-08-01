@@ -1,6 +1,6 @@
 # Welcome to TweetCloud!
 
-![Build](https://github.com/gblock0/TweetCloud/workflows/Python%20application/badge.svg)
+![Build](https://github.com/gblock0/TweetCloud/workflows/Build/badge.svg)
 
 
 The goal of this project is generate a gif of word clouds from a specific Twitter user's tweets. Currently, 3000 is the max number of tweets that will be fetched from Twitter.
