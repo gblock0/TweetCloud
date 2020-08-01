@@ -37,8 +37,6 @@ Running `tweetcloud nasa 1000` generates:
 
    **NOTE:** Running this will fail the `test_create_wordcloud` test, so please make sure to create new known images
 
-   **NOTE2:** I didn't do an audit of the test word sets, so please let me know if you find a word that shouldn't be in there
-
 ## Contributors
 
 - [jgoldfinger](https://github.com/jgoldfinger)
