@@ -81,9 +81,6 @@ def get_all_tweets(t, screen_name, number_of_tweets):
 # Creates a word cloud from the passed in word/frequency dictionary
 # and saved it in tmp_image_folder
 def create_wordcloud(words, date, tmp_image_folder, screen_name):
-    mask = np.zeros((234, 456), dtype=np.int)
-    mask[100:150, 300:400] = 255
-
     wordcloud = WordCloud(
         width=950,
         height=950,
