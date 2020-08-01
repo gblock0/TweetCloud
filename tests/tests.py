@@ -27,7 +27,8 @@ def test_normalize_and_split_tweet():
     assert words == {"words": 4, "test": 2, "gum": 5, "nuke": 3, "great": 1}
 
     # Test removing emails
-    emails_tweet = "test ttest++sdfsdflkj34+sdfa_sdf@gmail.co test+2@gmail.co test_12@ema-il.org test@email.com test-2@email.com"
+    emails_tweet = "test ttest++sdfsdflkj34+sdfa_sdf@gmail.co test+2@gmail.co "
+    emails_tweet += "test_12@ema-il.org test@email.com test-2@email.com"
     helpers.normalize_and_split_tweet(emails_tweet, words)
     assert words == {"words": 4, "test": 3, "gum": 5, "nuke": 3, "great": 1}
 
