@@ -28,7 +28,7 @@ jobs:
         restore-keys: |
           ${{ runner.os }}-pip-
     - name: Install Dependencies
-      if: steps.cache.outputs.cache-hit != 'true'
+      if: steps.cache.outputs.cache-hit != 'false'
       run: |
         pip install --upgrade pip
         pip install -e ".[dev]"
