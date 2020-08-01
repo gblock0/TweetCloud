@@ -95,7 +95,7 @@ def create_wordcloud(words, date, tmp_image_folder, screen_name):
     ).generate_from_frequencies(words)
     plt.figure(figsize=(9.5, 10), facecolor=None)
     plt.title(
-        "Words seen the week of " + str(date) + " in " + screen_name + "'s tweets",
+        screen_name + "'s tweets from the week of " + str(date),
         {"fontsize": 18, "fontweight": 600},
         pad=20,
     )

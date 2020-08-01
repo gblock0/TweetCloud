@@ -12,6 +12,7 @@ dependencies:
 
   # dev dependencies
   - black=19.*
+  - english_words=1.0.*
   - flake8=3.8.*
   - isort=5.2.*
   - pre-commit=2.6.*

@@ -1,0 +1,1 @@
+{'casanova': 25, 'locomotor': 9, 'tecum': 12, 'madam': 23, 'necessitate': 9, 'decade': 17, 'televise': 14, 'grove': 12, 'pessimum': 3, 'slit': 12, 'execrate': 22, 'credulity': 9, 'prince': 24, 'platypus': 18, 'propionate': 9, 'sykes': 18, 'duodenum': 21, 'fully': 16, 'purchasable': 19, 'trashy': 15}

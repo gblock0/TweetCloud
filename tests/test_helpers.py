@@ -1,6 +1,8 @@
 import datetime
 import pytest
+import ast
 import os
+import shutil
 import numpy as np
 from PIL import Image
 
@@ -40,22 +42,45 @@ def test_normalize_and_split_tweet(tweet, expected_words):
     assert words == expected_words
 
 @pytest.mark.parametrize(
-    "words, date, tmp_image_folder, screen_name",
+    "word_set_file_name, date, screen_name",
     [
         (
-            {"words": 15, "test":10, "name": 5},
-            datetime.datetime(2020, 8, 1),
-            "tests/test_images",
-            "test_account",
-         )
+            "small_word_set.txt",
+            datetime.date(2020, 8, 1),
+            "test_account_small",
+         ),
+        (
+            "medium_word_set.txt",
+            datetime.date(2018, 10, 12),
+            "test_account_medium",
+        ),
+        (
+            "large_word_set.txt",
+            datetime.date(1999, 1, 1),
+            "test_account_large",
+        ),
+        (
+            "huge_word_set.txt",
+            datetime.date(2000, 5, 31),
+            "test_account_huge",
+        ),
     ])
-def test_create_worldcloud(words, date, tmp_image_folder, screen_name):
-    test_image_path = helpers.create_wordcloud(words, date, tmp_image_folder, screen_name)
+def test_create_wordcloud(word_set_file_name, date, screen_name):
+    test_images_folder = "tests/test_images"
+
+    # Create folder for test images
+    if not os.path.isdir(test_images_folder):
+        os.mkdir(test_images_folder)
+
+    f = open("tests/word_sets/" + word_set_file_name, "r")
+    words = ast.literal_eval(f.read())
+    test_image_path = helpers.create_wordcloud(words, date, test_images_folder, screen_name)
 
     known_image = Image.open("tests/known_images/test_wordcloud-" + date.strftime("%Y-%m-%d") + ".png")
     test_image = Image.open(test_image_path)
 
-    # Check the difference in the images from https://redshiftzero.github.io/pytest-image/
+    # Check the difference in the images
+    # Pulled from https://redshiftzero.github.io/pytest-image/
     sum_sq_diff = np.sum((np.asarray(known_image).astype('float') - np.asarray(test_image).astype('float'))**2)
 
     if sum_sq_diff == 0:
@@ -65,4 +90,5 @@ def test_create_worldcloud(words, date, tmp_image_folder, screen_name):
         normalized_sum_sq_diff = sum_sq_diff / np.sqrt(sum_sq_diff)
         assert normalized_sum_sq_diff < 0.001
 
-    os.remove(test_image_path)
+    # Delete the test images
+    shutil.rmtree(test_images_folder)
