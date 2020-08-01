@@ -6,14 +6,14 @@ import matplotlib.pyplot as plt
 from PIL import Image
 from wordcloud import STOPWORDS, WordCloud
 
+# Stop Words
+stop_words = {"go", "will"}.union(set(STOPWORDS))
+
 
 # Normalize the tweet:
 #   - Remove mentions, emails, and websites
 #   - Disregard retweeted tweets
 def normalize_and_split_tweet(tweet, words):
-    # Stop Words
-    stop_words = {"go", "will"}.union(set(STOPWORDS))
-
     full_text = html.unescape(tweet)
     match_rt = full_text.startswith("RT @")
 
