@@ -30,13 +30,13 @@ possible_words = set(otp.read().lower().split())
 # Generate new word sets
 #  NOTE: Committing these will fail the test_create_wordcloud test
 generate_word_set(20, "tests/word_sets/small_word_set.txt")
-print("Generaed small word set...")
+print("Generated small word set...")
 
 generate_word_set(100, "tests/word_sets/medium_word_set.txt")
-print("Generaed medium word set...")
+print("Generated medium word set...")
 
 generate_word_set(500, "tests/word_sets/large_word_set.txt")
-print("Generaed large word set...")
+print("Generated large word set...")
 
 generate_word_set(1000, "tests/word_sets/huge_word_set.txt")
-print("Generaed huge word set...")
+print("Generated huge word set...")
