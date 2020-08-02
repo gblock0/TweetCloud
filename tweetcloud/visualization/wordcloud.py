@@ -1,3 +1,7 @@
+import datetime
+import tempfile
+from typing import Counter, Dict
+
 import matplotlib.pyplot as plt
 from PIL import Image
 from wordcloud import WordCloud
@@ -23,3 +27,29 @@ def create_wordcloud(words, date, tmp_image_folder, screen_name):
     plt.close()
 
     return Image.open(file_path)
+
+
+def create_animation(
+    word_counts: Dict[datetime.date, Counter[str]], screen_name: str
+) -> str:
+    word_clouds = []
+    sorted_dates = sorted(word_counts)
+    start_date = sorted_dates[0]
+    end_date = sorted_dates[-1]
+    filename = f"{screen_name}-{start_date:%Y-%m-%d}-to-{end_date:%Y-%m-%d}.gif"
+
+    with tempfile.TemporaryDirectory(prefix="tweetcloud-") as tmpdir:
+        for date in sorted_dates:
+            word_clouds.append(
+                create_wordcloud(word_counts[date], date, tmpdir, screen_name)
+            )
+
+        word_clouds[0].save(
+            filename,
+            save_all=True,
+            append_images=word_clouds[1:],
+            optimized=False,
+            duration=3000,
+            loop=0,
+        )
+    return filename
