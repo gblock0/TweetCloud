@@ -4,7 +4,9 @@ import tempfile
 import click
 import twitter
 
-from tweetcloud import helpers
+from tweetcloud.helpers import text as texthelper
+from tweetcloud.helpers import twitter_api
+from tweetcloud.visualization import wordcloud
 
 
 @click.command()
@@ -21,10 +23,10 @@ def cli(screen_name: str, number_of_tweets: int):
     )
 
     # Get all the tweets for the user
-    all_tweets = helpers.get_all_tweets(session, screen_name, number_of_tweets)
+    all_tweets = twitter_api.get_all_tweets(session, screen_name, number_of_tweets)
 
     # Normalize all the tweets and add the words to the words_of_the_weeks dictionary
-    words_of_the_weeks = helpers.transform_tweets_to_word_counts(all_tweets)
+    words_of_the_weeks = texthelper.transform_tweets_to_word_counts(all_tweets)
 
     with tempfile.TemporaryDirectory(prefix="tweetcloud-") as tmpdir:
         word_clouds = []
@@ -33,7 +35,7 @@ def cli(screen_name: str, number_of_tweets: int):
         end_date = sorted_dates[-1]
         for date in sorted_dates:
             word_clouds.append(
-                helpers.create_wordcloud(
+                wordcloud.create_wordcloud(
                     words_of_the_weeks[date], date, tmpdir, screen_name
                 )
             )
