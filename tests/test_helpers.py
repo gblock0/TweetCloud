@@ -70,21 +70,8 @@ def test_create_wordcloud(word_set_file_name, date, screen_name):
     test_image = Image.open(test_image_path)
 
     # Check the difference in the images
-    # Pulled from https://redshiftzero.github.io/pytest-image/
-    sum_sq_diff = np.sum(
-        (
-            np.asarray(known_image).astype("float")
-            - np.asarray(test_image).astype("float")
-        )
-        ** 2
-    )
-
-    if sum_sq_diff == 0:
-        # Images are exactly the same
-        pass
-    else:
-        normalized_sum_sq_diff = sum_sq_diff / np.sqrt(sum_sq_diff)
-        assert normalized_sum_sq_diff < 0.001
+    norm = np.linalg.norm(np.array(known_image, dtype="float") - np.array(test_image, dtype="float"))
+    assert norm < 0.001
 
     # Delete the test images
     shutil.rmtree(test_images_folder)
