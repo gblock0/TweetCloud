@@ -1,9 +1,9 @@
 import os
-import tempfile
 
 import click
 import twitter
 
+from tweetcloud import util
 from tweetcloud.helpers import text as texthelper
 from tweetcloud.helpers import twitter_api
 from tweetcloud.visualization import wordcloud
@@ -44,28 +44,13 @@ def cli(screen_name: str, number_of_tweets: int):
     )
 
     # Get all the tweets for the user
-    all_tweets = twitter_api.get_all_tweets(session, screen_name, number_of_tweets)
+    with util.spinner("Fetching tweets"):
+        all_tweets = twitter_api.get_all_tweets(session, screen_name, number_of_tweets)
 
     # Normalize all the tweets and add the words to the words_of_the_weeks dictionary
-    words_of_the_weeks = texthelper.transform_tweets_to_word_counts(all_tweets)
-
-    with tempfile.TemporaryDirectory(prefix="tweetcloud-") as tmpdir:
-        word_clouds = []
-        sorted_dates = sorted(words_of_the_weeks)
-        start_date = sorted_dates[0]
-        end_date = sorted_dates[-1]
-        for date in sorted_dates:
-            word_clouds.append(
-                wordcloud.create_wordcloud(
-                    words_of_the_weeks[date], date, tmpdir, screen_name
-                )
-            )
-
-        word_clouds[0].save(
-            f"{screen_name}-{start_date:%Y-%m-%d}-to-{end_date:%Y-%m-%d}.gif",
-            save_all=True,
-            append_images=word_clouds[1:],
-            optimized=False,
-            duration=3000,
-            loop=0,
+    with util.spinner("Creating word cloud"):
+        words_of_the_weeks = texthelper.transform_tweets_to_word_counts(all_tweets)
+        filename = wordcloud.create_animation(
+            word_counts=words_of_the_weeks, screen_name=screen_name
         )
+    click.echo(f"Created {filename}")
