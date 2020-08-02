@@ -1,5 +1,5 @@
-import ast
 import datetime
+import json
 import os
 import shutil
 
@@ -58,20 +58,22 @@ def test_create_wordcloud(word_set_file_name, date, screen_name):
     if not os.path.isdir(test_images_folder):
         os.mkdir(test_images_folder)
 
-    f = open("tests/word_sets/" + word_set_file_name, "r")
-    words = ast.literal_eval(f.read())
-    test_image_path = helpers.create_wordcloud(
-        words, date, test_images_folder, screen_name
-    )
+    with open("tests/word_sets/" + word_set_file_name) as word_set:
+        words = json.load(word_set)
+        test_image_path = helpers.create_wordcloud(
+            words, date, test_images_folder, screen_name
+        )
 
-    known_image = Image.open(
-        "tests/known_images/test_wordcloud-" + date.strftime("%Y-%m-%d") + ".png"
-    )
-    test_image = Image.open(test_image_path)
+        known_image = Image.open(
+            "tests/known_images/test_wordcloud-" + date.strftime("%Y-%m-%d") + ".png"
+        )
+        test_image = Image.open(test_image_path)
 
-    # Check the difference in the images
-    norm = np.linalg.norm(np.array(known_image, dtype="float") - np.array(test_image, dtype="float"))
-    assert norm < 0.001
+        # Check the difference in the images
+        norm = np.linalg.norm(
+            np.array(known_image, dtype="float") - np.array(test_image, dtype="float")
+        )
+        assert norm < 0.001
 
-    # Delete the test images
-    shutil.rmtree(test_images_folder)
+        # Delete the test images
+        shutil.rmtree(test_images_folder)

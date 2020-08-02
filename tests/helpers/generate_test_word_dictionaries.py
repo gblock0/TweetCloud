@@ -1,4 +1,4 @@
-# Use the set of English words containing lower-case letters with no punctuation
+import json
 import random
 import re
 
@@ -19,9 +19,8 @@ def generate_word_set(num_words, file_path):
         dic[random_word] = random.randint(2, 25)
 
     # Save the dictionary to a txt file for the test to read
-    f = open(file_path, "w")
-    f.write(str(dic))
-    f.close()
+    with open(file_path, "w") as f:
+        json.dump(dic, f)
 
 
 otp = open("tests/word_sets/hp_otp.txt", "r")
