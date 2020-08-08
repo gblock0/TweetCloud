@@ -13,27 +13,27 @@ from tweetcloud.visualization import wordcloud
 @pytest.mark.parametrize(
     "word_set_file_name, date, screen_name",
     [
-        ("small_word_set.txt", datetime.date(2020, 8, 1), "test_account_small",),
-        ("medium_word_set.txt", datetime.date(2018, 10, 12), "test_account_medium",),
-        ("large_word_set.txt", datetime.date(1999, 1, 1), "test_account_large",),
-        ("huge_word_set.txt", datetime.date(2000, 5, 31), "test_account_huge",),
+        ("small_word_set.json", datetime.date(2020, 8, 1), "test_account_small",),
+        ("medium_word_set.json", datetime.date(2018, 10, 12), "test_account_medium",),
+        ("large_word_set.json", datetime.date(1999, 1, 1), "test_account_large",),
+        ("huge_word_set.json", datetime.date(2000, 5, 31), "test_account_huge",),
     ],
 )
 def test_create_wordcloud(word_set_file_name, date, screen_name):
-    test_images_folder = "tests/test_images"
+    test_images_folder = "tests/helpers/data/test_images"
 
     # Create folder for test images
     if not os.path.isdir(test_images_folder):
         os.mkdir(test_images_folder)
 
-    with open("tests/word_sets/" + word_set_file_name) as word_set:
+    with open("tests/helpers/data/word_sets/" + word_set_file_name) as word_set:
         words = json.load(word_set)
         test_wordcloud = wordcloud.create_wordcloud(
             words, date, test_images_folder, screen_name
         )
 
         known_image = Image.open(
-            "tests/known_images/test_wordcloud-" + date.strftime("%Y-%m-%d") + ".png"
+            "tests/helpers/data/known_images/test_wordcloud-" + date.strftime("%Y-%m-%d") + ".png"
         )
 
         test_image = test_wordcloud
