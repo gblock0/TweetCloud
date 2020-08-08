@@ -2,7 +2,6 @@ import os
 
 import click
 import twitter
-from PIL import Image
 
 from tweetcloud import util
 from tweetcloud.helpers import text as texthelper

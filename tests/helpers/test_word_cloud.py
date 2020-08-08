@@ -6,7 +6,9 @@ import shutil
 import numpy as np
 import pytest
 from PIL import Image
+
 from tweetcloud.visualization import wordcloud
+
 
 @pytest.mark.parametrize(
     "word_set_file_name, date, screen_name",
