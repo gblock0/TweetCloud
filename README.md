@@ -17,9 +17,11 @@ The goal of this project is generate a gif of word clouds from a specific Twitte
    - `export TWTR_ACC_KEY=<TWITTER_ACCESS_TOKEN>`
    - `export TWTR_ACC_SEC=<TWITTER_TOKEN_SECRET>`
 
-## How to use
+## Basic usage
 
-`tweetcloud <screen_name> <number_of_tweets>`
+Run `tweetcloud SCREEN_NAME` to generate wordclouds for `SCREEN_NAME`
+
+See `tweetcloud --help` for more options
 
 ### Example
 
