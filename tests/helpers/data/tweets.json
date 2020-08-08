@@ -1,0 +1,111 @@
+{
+  "tweets": [
+    {
+      "full_text": "test words nuke nuke words",
+      "created_at": "Sun Jul 26 23:58:14 +0000 2020",
+      "counts": {
+        "words": 2,
+        "test": 1,
+        "nuke": 2
+      },
+      "id": {
+        "normalize": "counting",
+        "group": "Sunday"
+      },
+      "group": "2020-07-20"
+    },
+    {
+      "full_text": "in a other some go test",
+      "created_at": "Mon Jul 27 01:41:10 +0000 2020",
+      "counts": {
+        "test": 1
+      },
+      "id": {
+        "normalize": "ignore stop_words",
+        "group": "Monday"
+      },
+      "group": "2020-07-27"
+    },
+    {
+      "full_text": "@testAccount great @TestAccountNum1 @testAccountHypen_1 nuke",
+      "created_at": "Tue Aug 04 23:34:40 +0000 2020",
+      "counts": {
+        "great": 1,
+        "nuke": 1
+      },
+      "id": {
+        "normalize": "remove account handles",
+        "group": "Tuesday"
+      },
+      "group": "2020-08-03"
+    },
+    {
+      "full_text": "http://te.gov words https://test.co",
+      "created_at": "Wed Jul 29 11:41:48 +0000 2020",
+      "counts": {
+        "words": 1
+      },
+      "id": {
+        "normalize": "remove URLs",
+        "group": "Wednesday"
+      },
+      "group": "2020-07-27"
+    },
+    {
+      "full_text": "test ttest++sdfsdflkj34+sdfa_sdf@gmail.co test+2@gmail.co\n             test_12@ema-il.org test@email.com test-2@email.com",
+      "created_at": "Thu Aug 06 14:36:25 +0000 2020",
+      "counts": {
+        "test": 1
+      },
+      "id": {
+        "normalize": "remove emails",
+        "group": "Thursday"
+      },
+      "group": "2020-08-03"
+    },
+    {
+      "full_text": "RT @testAccount Some other tweet here",
+      "created_at": "Fri Aug 07 12:16:15 +0000 2020",
+      "counts": {},
+      "id": {
+        "normalize": "ignore retweets",
+        "group": "Friday"
+      },
+      "group": "2020-08-03"
+    },
+    {
+      "full_text": "So_me words1 w1th numb3r$ a.nd ",
+      "created_at": "Sun Aug 02 04:09:17 +0000 2020",
+      "counts": {
+        "words": 1,
+        "so_me": 1,
+        "wth": 1,
+        "numbr": 1
+      },
+      "id": {
+        "normalize": "remove bad characters",
+        "group": "Saturday"
+      },
+      "group": "2020-07-27"
+    }
+  ],
+  "counts": {
+    "2020-07-20": {
+      "words": 2,
+      "nuke": 2,
+      "test": 1
+    },
+    "2020-07-27": {
+      "words": 2,
+      "test": 1,
+      "so_me": 1,
+      "wth": 1,
+      "numbr": 1
+    },
+    "2020-08-03": {
+      "great": 1,
+      "nuke": 1,
+      "test": 1
+    }
+  }
+}
