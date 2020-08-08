@@ -37,4 +37,4 @@ def cli(screen_name: str, number_of_tweets: int):
     filename = wordcloud.create_animation(
         word_counts=words_of_the_weeks, screen_name=screen_name
     )
-    click.echo(f"Created {filename}")
+    click.echo(f"Animation saved to {filename}")

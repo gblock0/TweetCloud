@@ -47,7 +47,7 @@ def create_animation(
     with tempfile.TemporaryDirectory(prefix="tweetcloud-") as tmpdir:
         with alive_bar(
             total=len(sorted_dates),
-            title="Creating word cloud",
+            title="Creating word clouds",
             spinner="dots_reverse",
         ) as bar:
             for date in sorted_dates:

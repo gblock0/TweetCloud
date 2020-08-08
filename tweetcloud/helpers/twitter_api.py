@@ -32,7 +32,7 @@ def get_latest_tweets(screen_name: str, number_of_tweets: int) -> List[Status]:
 
     with alive_bar(
         total=number_of_tweets,
-        title="Fetching tweets",
+        title="Downloading tweets",
         spinner="dots_reverse",
         manual=True,
     ) as bar:
@@ -42,6 +42,8 @@ def get_latest_tweets(screen_name: str, number_of_tweets: int) -> List[Status]:
         while len(tweets) < number_of_tweets:
             new_tweets: List[Status] = session.GetUserTimeline(
                 screen_name=screen_name,
+                # without setting this, only a few tweets will
+                # be returned on each query.
                 count=min(number_of_tweets, 200),
                 max_id=last_id,
                 include_rts=False,
