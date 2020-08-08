@@ -33,7 +33,9 @@ def test_create_wordcloud(word_set_file_name, date, screen_name):
         )
 
         known_image = Image.open(
-            "tests/helpers/data/known_images/test_wordcloud-" + date.strftime("%Y-%m-%d") + ".png"
+            "tests/helpers/data/known_images/test_wordcloud-"
+            + date.strftime("%Y-%m-%d")
+            + ".png"
         )
 
         test_image = test_wordcloud
