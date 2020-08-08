@@ -3,6 +3,7 @@ import tempfile
 from typing import Counter, Dict
 
 import matplotlib.pyplot as plt
+from alive_progress import alive_bar
 from PIL import Image
 from wordcloud import WordCloud
 
@@ -39,10 +40,16 @@ def create_animation(
     filename = f"{screen_name}-{start_date:%Y-%m-%d}-to-{end_date:%Y-%m-%d}.gif"
 
     with tempfile.TemporaryDirectory(prefix="tweetcloud-") as tmpdir:
-        for date in sorted_dates:
-            word_clouds.append(
-                create_wordcloud(word_counts[date], date, tmpdir, screen_name)
-            )
+        with alive_bar(
+            total=len(sorted_dates),
+            title="Creating word cloud",
+            spinner="dots_reverse",
+        ) as bar:
+            for date in sorted_dates:
+                word_clouds.append(
+                    create_wordcloud(word_counts[date], date, tmpdir, screen_name)
+                )
+                bar()
 
         word_clouds[0].save(
             filename,

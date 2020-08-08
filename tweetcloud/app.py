@@ -1,9 +1,5 @@
-import os
-
 import click
-import twitter
 
-from tweetcloud import util
 from tweetcloud.helpers import text as texthelper
 from tweetcloud.helpers import twitter_api
 from tweetcloud.visualization import wordcloud
@@ -33,24 +29,12 @@ def cli(screen_name: str, number_of_tweets: int):
 
     Example: tweetcloud nasa
     """
-
-    # Connect to the Twitter API
-    session = twitter.Api(
-        consumer_key=os.getenv("TWTR_CONS_KEY"),
-        consumer_secret=os.getenv("TWTR_CONS_SEC"),
-        access_token_key=os.getenv("TWTR_ACC_KEY"),
-        access_token_secret=os.getenv("TWTR_ACC_SEC"),
-        tweet_mode="extended",
-    )
-
     # Get all the tweets for the user
-    with util.spinner("Fetching tweets"):
-        all_tweets = twitter_api.get_all_tweets(session, screen_name, number_of_tweets)
+    all_tweets = twitter_api.get_latest_tweets(screen_name, number_of_tweets)
 
     # Normalize all the tweets and add the words to the words_of_the_weeks dictionary
-    with util.spinner("Creating word cloud"):
-        words_of_the_weeks = texthelper.transform_tweets_to_word_counts(all_tweets)
-        filename = wordcloud.create_animation(
-            word_counts=words_of_the_weeks, screen_name=screen_name
-        )
+    words_of_the_weeks = texthelper.transform_tweets_to_word_counts(all_tweets)
+    filename = wordcloud.create_animation(
+        word_counts=words_of_the_weeks, screen_name=screen_name
+    )
     click.echo(f"Created {filename}")
