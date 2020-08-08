@@ -3,6 +3,7 @@ channels:
   - conda-forge
 dependencies:
   - python=3.8.*
+  - alive-progress=1.6.*
   - click=7.1.*
   - matplotlib=3.3.*
   - pillow=7.2.*
