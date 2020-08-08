@@ -2,7 +2,6 @@
 
 ![Build](https://github.com/gblock0/TweetCloud/workflows/BuildAndRunTests/badge.svg)
 
-
 The goal of this project is generate a gif of word clouds from a specific Twitter user's tweets. Currently, 3000 is the max number of tweets that will be fetched from Twitter.
 
 **NOTE**: This project is in development, so not all features will work or are finished! Feel free to open a PR if you'd like to contribute!
@@ -36,6 +35,9 @@ Running `tweetcloud nasa 1000` generates:
 1. Activate environment and install using `--editable`: `pip install -e ".[dev]"`
 1. Run tests with `pytest tests/`
 1. Run `pre-commit run --all-files` before opening a PR please
+1. To regenerate the word lists run: `python3 tests/helpers/generate_test_word_dictionaries.py`
+
+   **NOTE:** Running this will fail the `test_create_wordcloud` test, so please make sure to create new known images
 
 ## Contributors
 
